@@ -271,7 +271,12 @@ class AppointmentService
                     ->execute();
             }
 
-            return $existing['id'];
+            $existingId = $existing['id'] ?? null;
+            if (!is_string($existingId) || $existingId === '') {
+                throw new \RuntimeException('Musteri kaydi gecerli bir id icermiyor');
+            }
+
+            return $existingId;
         }
 
         // Create new customer

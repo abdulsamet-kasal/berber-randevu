@@ -50,37 +50,37 @@ class CatalogController extends BaseController
     private function loadStaff(): array
     {
         $staffRows = \App\Services\Supabase::rows(
-                $this->client()
+            $this->client()
                     ->from('staff')
                     ->select('id, profile_id, bio')
                     ->eq('is_active', true)
                     ->execute()
+        );
+
+        $profileIds = array_values(array_filter(array_column($staffRows, 'profile_id')));
+        $profiles = [];
+        if ($profileIds !== []) {
+            $profileRows = \App\Services\Supabase::rows(
+                $this->client()
+                    ->from('profiles')
+                    ->select('id, full_name')
+                    ->in('id', $profileIds)
+                    ->execute()
             );
-
-            $profileIds = array_values(array_filter(array_column($staffRows, 'profile_id')));
-            $profiles = [];
-            if ($profileIds !== []) {
-                $profileRows = \App\Services\Supabase::rows(
-                    $this->client()
-                        ->from('profiles')
-                        ->select('id, full_name')
-                        ->in('id', $profileIds)
-                        ->execute()
-                );
-                foreach ($profileRows as $p) {
-                    $profiles[$p['id']] = $p['full_name'] ?? null;
-                }
+            foreach ($profileRows as $p) {
+                $profiles[$p['id']] = $p['full_name'] ?? null;
             }
+        }
 
-            $out = [];
-            foreach ($staffRows as $s) {
-                $out[] = [
-                    'id' => $s['id'],
-                    'full_name' => $profiles[$s['profile_id'] ?? ''] ?? 'Usta',
-                    'bio' => $s['bio'] ?? null,
-                ];
-            }
+        $out = [];
+        foreach ($staffRows as $s) {
+            $out[] = [
+                'id' => $s['id'],
+                'full_name' => $profiles[$s['profile_id'] ?? ''] ?? 'Usta',
+                'bio' => $s['bio'] ?? null,
+            ];
+        }
 
-            return $out;
+        return $out;
     }
 }

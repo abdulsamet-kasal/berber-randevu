@@ -553,4 +553,3 @@ class AdminController extends BaseController
         return $this->json($response, ['success' => true, 'data' => array_merge(['id' => $id], $staffPatch, $fullName !== null ? ['full_name' => $fullName] : [])]);
     }
 }
-

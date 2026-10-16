@@ -33,3 +33,8 @@ Thumbs.db
 # File cache (runtime, cPanel'de otomatik olusur)
 storage/cache/*
 !storage/cache/.gitkeep
+
+# PHP CS Fixer cache
+/.php-cs-fixer.cache
+# Composer PHAR (lokal kurulum araci)
+/composer.phar

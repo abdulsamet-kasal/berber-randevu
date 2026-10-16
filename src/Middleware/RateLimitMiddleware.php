@@ -161,59 +161,6 @@ class RateLimitMiddleware implements MiddlewareInterface
     }
 
     /**
-     * Increment the request counter for an IP and endpoint
-     *
-     * @param string $ipAddress Client IP address
-     * @param string $endpoint Endpoint being accessed
-     * @return void
-     */
-    private function incrementCounter(string $ipAddress, string $endpoint): void
-    {
-        try {
-            $client = $this->client();
-            if ($client === null) {
-                return;
-            }
-            $now = new \DateTimeImmutable();
-            $windowStart = $now->modify("-{$this->window} seconds");
-
-            $existing = \App\Services\Supabase::rows(
-                $client
-                    ->from('rate_limits')
-                    ->select('id, request_count')
-                    ->eq('ip_address', $ipAddress)
-                    ->eq('endpoint', $endpoint)
-                    ->gte('window_start', $windowStart->format('Y-m-d H:i:s'))
-                    ->limit(1)
-                    ->execute()
-            );
-
-            if (count($existing) > 0 && is_array($existing[0]) && isset($existing[0]['id'])) {
-                // Update existing record
-                $newCount = (int)($existing[0]['request_count'] ?? 0) + 1;
-                $client
-                    ->from('rate_limits')
-                    ->update(['request_count' => $newCount])
-                    ->eq('id', $existing[0]['id'])
-                    ->execute();
-            } else {
-                // Insert new record
-                $client
-                    ->from('rate_limits')
-                    ->insert([
-                        'ip_address' => $ipAddress,
-                        'endpoint' => $endpoint,
-                        'window_start' => $now->format('Y-m-d H:i:s'),
-                        'request_count' => 1
-                    ])
-                    ->execute();
-            }
-        } catch (\Throwable $e) {
-            // Ignore counter errors
-        }
-    }
-
-    /**
      * Get client IP address from request
      *
      * @param Request $request PSR-7 request
