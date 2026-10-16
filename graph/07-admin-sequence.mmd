@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant A as Admin
+    participant D as /admin paneli
+    participant S as Slim API
+    participant P as PostgREST
+    participant K as Cache (catalog_*)
+    A->>D: Tarih araligi + filtre (from/to/staff/status)
+    D->>S: GET /api/admin/appointments?...
+    S->>P: aralik sorgusu (max 62 gun)
+    P-->>S: randevular
+    S-->>D: 200 + liste (Tarih sutunu)
+    A->>D: Satirda durum degistir + Kaydet
+    D->>S: PATCH /api/admin/appointments/{id}
+    S-->>D: 200 + tablo tazele
+    A->>D: Hizmet/Usta ekle-duzenle
+    D->>S: POST/PATCH/DELETE /api/admin/services|staff
+    S->>K: Cache::forget (aninda guncel site)

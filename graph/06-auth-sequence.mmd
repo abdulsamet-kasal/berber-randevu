@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant A as Admin
+    participant F as /admin/giris formu
+    participant S as Slim API
+    participant G as Supabase Auth
+    A->>F: e-posta + sifre
+    F->>S: POST /api/admin/login
+    S->>G: signInWithPassword()
+    G-->>S: access_token + user (admin mi?)
+    S-->>F: 200 + Bearer token + Set-Cookie br_admin_token
+    F->>F: token localStorage + /admin
+    A->>S: GET /admin (cookie)
+    S-->>A: 200 dashboard (yoksa 302 /admin/giris)
+    A->>S: GET /api/admin/* (Bearer)
+    S-->>A: 200 JSON (yoksa 401)

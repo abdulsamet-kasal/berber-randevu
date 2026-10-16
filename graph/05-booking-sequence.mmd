@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant U as Kullanici
+    participant W as /randevu sayfasi
+    participant S as Slim API
+    participant E as SlotEngine
+    participant P as PostgREST
+    U->>W: Tarih + personel sec
+    W->>S: GET /api/available-slots
+    S->>P: working_hours + time_off + gunluk appointments
+    P-->>S: satirlar
+    S->>E: getAvailableSlots()
+    E-->>S: musait slotlar
+    S-->>W: 200 + slots[]
+    U->>W: Slot sec + KVKK onayi
+    W->>S: POST /api/appointments
+    S->>S: TR telefon + tarih formati kontrol
+    S->>P: idempotency kontrol + insert
+    P-->>S: confirmation_code
+    S-->>W: 200 + kod

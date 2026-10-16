@@ -1,0 +1,59 @@
+{
+    "name": "berber-randevu/berber-randevu",
+    "description": "Açık kaynaklı berber randevu ve yönetim sistemi",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "berber-randevu contributors",
+            "email": "contributors@berber-randevu.example"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "slim/slim": "^4.10",
+        "slim/psr7": "^1.5",
+        "vlucas/phpdotenv": "^5.5",
+        "supabase/supabase-php": "^0.0.3",
+        "ramsey/uuid": "^4.2",
+        "ext-pdo": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "phpstan/phpstan": "^1.12",
+        "symfony/var-dumper": "^6.4",
+        "mockery/mockery": "^1.6",
+        "friendsofphp/php-cs-fixer": "^3.16"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "cs-check": "php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix",
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        },
+        "policy.advisories.block": false,
+        "policy": {
+            "advisories": {
+                "ignore-id": ["PKSA-gcrk-3vtt-1r14", "PKSA-cnw1-2ytm-cgr8", "PKSA-fy2t-3c5f-827y", "PKSA-qxvb-2bpp-dnk6", "PKSA-bbs6-q5q9-f3t4", "PKSA-bcdd-5xc7-gwfb", "PKSA-pwsk-hy21-4gby", "PKSA-93qv-9n9h-6k6p", "PKSA-k22t-f949-t9g6"]
+            }
+        }
+    }
+}

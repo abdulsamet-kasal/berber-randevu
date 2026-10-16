@@ -1,0 +1,30 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# Environment variables
+/.env
+
+# Supabase local CLI cache
+/supabase/.temp/
+
+# Logs
+/*.log
+/*.err
+
+# IDE
+/.idea/
+*.iml
+/.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test artifaklari
+/.phpunit.result.cache
+/-w
+
+# File cache (runtime, cPanel'de otomatik olusur)
+storage/cache/*
+!storage/cache/.gitkeep

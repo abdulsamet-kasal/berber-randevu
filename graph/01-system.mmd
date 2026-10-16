@@ -1,0 +1,18 @@
+flowchart TB
+    Browser["Tarayici<br/>(SSR sayfalar + app.js)"] --> Slim["PHP 8.3 + Slim 4<br/>public/index.php"]
+    Slim --> Csrf["CsrfMiddleware<br/>(/api muaf)"]
+    Csrf --> Rate["RateLimitMiddleware<br/>(fail-open)"]
+    Rate --> Routes["src/routes.php<br/>11 sayfa + 20 API"]
+    Routes --> Pages["App.View.View<br/>templates/*.php (12)"]
+    Routes --> API["App.API.*Controller (5)"]
+    API --> Svc["App.Appointment.AppointmentService"]
+    API --> Cache["App.Services.Cache<br/>dosya cache, 5 dk TTL"]
+    Cache -.-> SB
+    API --> Svc["App.Appointment.AppointmentService"]
+    Svc --> Slot["App.Slot.SlotEngine"]
+    Svc --> SB["App.Services.Supabase<br/>Supabase::rows()"]
+    Rate --> SB
+    API --> SB
+    SB --> REST["Supabase PostgREST<br/>17 tablo + RLS"]
+    SB --> Auth["Supabase Auth<br/>JWT login"]
+    REST --> PG[("PostgreSQL")]

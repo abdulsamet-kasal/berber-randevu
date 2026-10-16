@@ -1,0 +1,182 @@
+erDiagram
+    PROFILES {
+        uuid id PK FK
+        text role
+        text full_name
+        text avatar_url
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    STAFF {
+        uuid id PK
+        uuid profile_id FK
+        text bio
+        boolean is_active
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    SERVICES {
+        uuid id PK
+        text name
+        text description
+        integer duration_minutes
+        decimal(10,2) price
+        text category
+        boolean is_active
+        integer sort_order
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    STAFF_SERVICES {
+        uuid staff_id FK
+        uuid service_id FK
+    }
+    WORKING_HOURS {
+        uuid id PK
+        uuid staff_id FK
+        integer day_of_week
+        time start_time
+        time end_time
+        boolean is_active
+        time break_start
+        time break_end
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    TIME_OFF {
+        uuid id PK
+        uuid staff_id FK
+        date start_date
+        date end_date
+        text reason
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    BUSINESS_SETTINGS {
+        uuid id PK
+        text business_name
+        text address
+        text phone
+        text map_embed
+        jsonb default_working_hours
+        integer cancellation_policy_hours
+        integer booking_lead_time_minutes
+        integer max_booking_days
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    CUSTOMERS {
+        uuid id PK
+        text name
+        text phone
+        text email
+        boolean kvkk_consent
+        timestamptz kvkk_consent_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    APPOINTMENTS {
+        uuid id PK
+        uuid staff_id FK
+        uuid customer_id FK
+        timestamptz start_time
+        timestamptz end_time
+        text status
+        text confirmation_code
+        text customer_note
+        text internal_note
+        uuid idempotency_key
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    APPOINTMENT_SERVICES {
+        uuid id PK
+        uuid appointment_id FK
+        uuid service_id FK
+        text service_name
+        integer duration_minutes
+        decimal(10,2) price
+        timestamptz created_at
+    }
+    GALLERY_ITEMS {
+        uuid id PK
+        text category
+        text title
+        text image_url
+        boolean is_published
+        integer sort_order
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    REVIEWS {
+        uuid id PK
+        uuid appointment_id FK
+        integer rating
+        text comment
+        boolean is_published
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    ANNOUNCEMENTS {
+        uuid id PK
+        text title
+        text content
+        timestamptz starts_at
+        timestamptz ends_at
+        boolean is_active
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    NOTIFICATIONS {
+        uuid id PK
+        uuid recipient_uuid FK
+        text type
+        text title
+        text message
+        uuid related_uuid
+        boolean is_read
+        timestamptz read_at
+        timestamptz created_at
+    }
+    CONSENTS {
+        uuid id PK
+        uuid customer_uuid FK
+        text consent_text_version
+        timestamptz consent_at
+        inet ip_address
+        timestamptz created_at
+    }
+    AUDIT_LOGS {
+        uuid id PK
+        text table_name
+        uuid record_uuid
+        text action
+        jsonb changed_jsonb
+        uuid performed_by_uuid FK
+        timestamptz created_at
+    }
+    RATE_LIMITS {
+        uuid id PK
+        inet ip_address
+        text endpoint
+        timestamptz window_start
+        integer request_count
+        timestamptz created_at
+    }
+    %% 003_rate_limit_unique.sql: benzersiz (ip_address, endpoint) kilidi
+    %% + migration: 000_extensions.sql, 003_rate_limit_unique.sql
+    %% + seed: ON CONFLICT DO NOTHING (idempotent)
+    PROFILES }|--|| USERS : "id"
+    STAFF }|--|| PROFILES : "profile_id"
+    STAFF_SERVICES }|--|| STAFF : "staff_id"
+    STAFF_SERVICES }|--|| SERVICES : "service_id"
+    WORKING_HOURS }|--|| STAFF : "staff_id"
+    TIME_OFF }|--|| STAFF : "staff_id"
+    APPOINTMENTS }|--|| STAFF : "staff_id"
+    APPOINTMENTS }|--|| CUSTOMERS : "customer_id"
+    APPOINTMENT_SERVICES }|--|| APPOINTMENTS : "appointment_id"
+    APPOINTMENT_SERVICES }|--|| SERVICES : "service_id"
+    REVIEWS }|--|| APPOINTMENTS : "appointment_id"
+    NOTIFICATIONS }|--|| USERS : "recipient_uuid"
+    CONSENTS }|--|| CUSTOMERS : "customer_uuid"
+    AUDIT_LOGS }|--|| USERS : "performed_by_uuid"

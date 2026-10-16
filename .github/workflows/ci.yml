@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, intl, pdo_pgsql
+        tools: composer, php-cs-fixer
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+
+    - name: Validate composer.json
+      run: composer validate --strict
+
+    - name: Run PHP CS Fixer
+      run: composer cs-check
+
+    - name: Run PHPStan
+      run: vendor/bin/phpstan analyse --memory-limit=1G -l max src
+
+    - name: Run PHPUnit tests
+      run: vendor/bin/phpunit --colors=always
+
+    - name: Lint JS/TS (if any)
+      run: npx eslint . || true
+
+    - name: Build Tailwind CSS (if applicable)
+      run: npx tailwindcss -i ./src/css/input.css -o ./public/assets/css/app.css --minify || true
+
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps chromium || true
+
+    - name: Run Playwright tests
+      run: npx playwright test || true

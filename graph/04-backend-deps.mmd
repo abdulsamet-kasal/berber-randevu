@@ -1,0 +1,23 @@
+flowchart TB
+    C0["App\API\AppointmentController"]
+    C1["App\API\AuthController"]
+    C2["App\API\BaseController"]
+    C3["App\Appointment\AppointmentService"]
+    C4["App\Middleware\CsrfMiddleware"]
+    C5["App\Middleware\RateLimitMiddleware"]
+    C6["App\Notification\RealtimeService"]
+    C7["App\Services\Supabase"]
+    C8["App\Slot\SlotEngine"]
+    C9["App\View\View"]
+    C10["App\API\AdminController"]
+    C11["App\API\CatalogController"]
+    C12["App\Middleware\AdminAuthMiddleware"]
+    C13["App\Services\Cache"]
+    C0 --> C3
+    C3 --> C8
+    C3 --> C7
+    C6 --> C7
+    C10 --> C7
+    C10 --> C13
+    C11 --> C7
+    C11 --> C13

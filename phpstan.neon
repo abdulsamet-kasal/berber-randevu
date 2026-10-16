@@ -1,0 +1,15 @@
+parameters:
+    level: 6
+    paths:
+        - src
+    ignoreErrors:
+        # supabase-php exposes the query builder via magic __call/__get
+        - '#Call to an undefined method Supabase\\CreateClient::from\(\)\.#'
+        - '#Access to private property Supabase\\CreateClient::\$auth\.#'
+        - '#Cannot call method (signInWithPassword|signOut)\(\) on mixed\.#'
+        # Array-shape generics are intentionally loose in this codebase
+        - '#no value type specified in iterable type array\.#'
+        # Supabase rows are decoded as mixed; explicit scalar casts are intentional
+        - '#Cannot cast mixed to (int|string)\.#'
+    excludePaths:
+        - ./tests/*
