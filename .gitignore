@@ -25,6 +25,11 @@ Thumbs.db
 /.phpunit.result.cache
 /-w
 
+# Yerel test raporu + yedekler (public repoya girmez)
+/TEST_REPORT.md
+/rls-yedek-*.sql
+/storage/logs/*
+
 # File cache (runtime, cPanel'de otomatik olusur)
 storage/cache/*
 !storage/cache/.gitkeep
