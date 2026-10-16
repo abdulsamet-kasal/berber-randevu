@@ -21,7 +21,7 @@ jobs:
         tools: composer, php-cs-fixer
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+      run: composer install --prefer-dist --no-progress --no-interaction
 
     - name: Validate composer.json
       run: composer validate --strict
